@@ -4,16 +4,20 @@
 
 ## 运行
 
-需要 Node.js 18 或更新版本：
+**直接玩：下载最新版 `index.html`，双击即可打开。** 这个文件已经包含全部样式、Three.js 和游戏代码，无需安装 Node.js，也无需下载其他文件或联网。请使用支持 WebGL 2 的最新版 Chrome、Edge 或 Firefox；启动失败时页面会显示原因和重试按钮。
+
+也可以通过静态服务器访问。需要 Node.js 18 或更新版本：
 
 ```sh
 cd /workspace/danhai
 npm run dev
 ```
 
-在浏览器打开服务器输出的端口（默认 3000）。也可以用 `python3 -m http.server 3000` 提供静态服务。请通过 HTTP 访问，浏览器通常会限制 `file://` 下的 ES 模块。
+在浏览器打开服务器输出的端口（默认 3000）。也可以用 `python3 -m http.server 3000` 提供静态服务，或把 `index.html` 放到自己的静态网站。
 
-Three.js **0.186.1** 的浏览器模块已保存在 `vendor/`，运行时无需 npm 安装或访问 CDN。第三方许可证见 `vendor/THREE-LICENSE.txt`。
+Three.js **0.186.1** 的源码模块已保存在 `vendor/`，并打包进 `index.html`，运行时无需 npm 安装或访问 CDN。第三方许可证见 `vendor/THREE-LICENSE.txt`，打包文件也保留版权声明。
+
+双击本地文件和通过网站打开时，浏览器可能分别保存存档；部分浏览器不允许本地文件保存数据，页面会提示，但仍可游玩。
 
 ## 玩法
 
@@ -53,9 +57,20 @@ window.HappyFarm.disconnectDanmaku();
 
 ## 文件
 
-- `index.html` / `style.css`：完整游戏界面与响应式布局。
+- `index.html`：可独立运行的完整游戏，由构建脚本生成。
+- `index.template.html` / `style.css`：界面模板与响应式样式源码。
 - `farm.js`：程序化建模、动画、喂食、市场、存档及弹幕适配。
+- `startup.js`：启动状态与失败提示。
+- `build.mjs`：使用 esbuild 生成单文件 HTML，避免本地 ES 模块加载限制。
 - `server.mjs`：开发静态服务器，可通过 `PORT` 指定端口。
 - `vendor/`：固定版本的 Three.js、OrbitControls、几何合并工具及许可证。
 
-运行 `npm run check` 检查脚本语法。开发时在支持 WebGL 2 的浏览器中验证动画和交互；静态场景按材质合并，降低丰富物件的绘制开销，移动端限制渲染像素比。
+修改源码后，需要重新生成 `index.html`：
+
+```sh
+npm ci
+npm run build
+npm run check
+```
+
+`npm run check` 检查脚本语法和生成文件是否与源码一致。开发时在支持 WebGL 2 的浏览器中验证动画和交互；静态场景按材质合并，降低丰富物件的绘制开销，移动端限制渲染像素比。

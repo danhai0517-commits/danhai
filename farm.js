@@ -67,7 +67,7 @@ scene.fog=new THREE.Fog('#f2f0de',48,85);
 const container=$('scene-container');
 let renderer;
 try{renderer=new THREE.WebGLRenderer({antialias:true,alpha:true,preserveDrawingBuffer:true});}
-catch(error){$('loading').innerHTML='<strong>这个浏览器暂时无法绘制 3D 农场</strong><span>请使用支持 WebGL 2 的浏览器，并开启硬件加速。</span>';throw error;}
+catch(error){window.FarmStartup.fail('这个浏览器暂时无法绘制 3D 农场','请使用支持 WebGL 2 的最新版 Chrome、Edge 或 Firefox，并开启硬件加速。');throw error;}
 renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.setClearColor('#f1efe0',0);container.append(renderer.domElement);
 renderer.domElement.setAttribute('aria-label','三维开心农场，可拖动旋转并点击动物');renderer.domElement.tabIndex=0;
 const camera=new THREE.OrthographicCamera(-20,20,15,-15,.1,120);camera.position.set(25,30,32);camera.lookAt(0,0,0);
@@ -270,7 +270,7 @@ function animate(timestamp){timer.update(timestamp);const dt=Math.min(timer.getD
   rain.visible=t<rainUntil;
   if(rain.visible!==lastRain){lastRain=rain.visible;document.querySelector('.weather').textContent=rain.visible?'☂  小雨 · 24°':'☀  晴天 · 24°';}
   if(rain.visible&&!reducedMotion.matches){for(let i=0;i<rainCount;i++){rainPositions[i*3+1]-=dt*5;if(rainPositions[i*3+1]<0)rainPositions[i*3+1]=rand(9,12);}rainGeo.attributes.position.needsUpdate=true;}
-  renderer.render(scene,camera);if(!ready){ready=true;$('loading').hidden=true;}
+  renderer.render(scene,camera);if(!ready){ready=true;window.FarmStartup.ready();}
 }
 renderer.setAnimationLoop(animate);
 
