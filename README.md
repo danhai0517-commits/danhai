@@ -74,3 +74,59 @@ npm run check
 ```
 
 `npm run check` 检查脚本语法和生成文件是否与源码一致。开发时在支持 WebGL 2 的浏览器中验证动画和交互；静态场景按材质合并，降低丰富物件的绘制开销，移动端限制渲染像素比。
+
+---
+
+# 抢包子大作战（`baozi/`）
+
+第二个独立的抖音弹幕互动 3D 游戏，与开心农场共用 `vendor/` 里的 Three.js，构建产物是单文件 `baozi/index.html`，双击即可打开，无需服务器。
+
+## 运行
+
+```bash
+npm run build:baozi        # 生成 baozi/index.html
+npm run check:baozi        # 语法 + 打包检查
+npm run dev                # 启动静态服务器后访问 http://localhost:3000/baozi/index.html
+```
+
+页面是固定 1080×1920 逻辑竖屏舞台，会按窗口自适应等比缩放，适合直播伴侣/OBS 以 9:16 画布采集。
+
+## 玩法
+
+- 场景是夜市包子铺，竞技场是一只巨型竹蒸笼，分 **A 红 / B 蓝 / C 绿 / D 紫** 四个扇区，中央大厨定时掀盖出锅。
+- 弹幕发 `A` / `B` / `C` / `D` 或「加入A」「红队」等，即可生成带名字的 Q 版包子侠，永久在场、跨回合保留。
+- 包子侠自动抢包子并运回本队竹篓计分：普通包子 1 分、肉包 3 分、辣包子 2 分并加速、金包子 10 分（扛着变慢）、超级大包子 50 分。
+- 个人战功 5 / 15 / 35 升到 L2 / L3 / L4：更快、能同时扛 1 → 3 个包子，并换上帽子与光环。
+- 弹幕指令：`冲` / `抢` 冲刺（2 秒冷却）、`666` / `加油` 全队加速、`跳舞` 表情、`点赞` 累计每 50 次掉一个包子。
+- 馋嘴老鼠会定时扑向领先队的竹篓偷分，附近包子侠或英雄会自动揍回，老鼠数量随难度增加。
+- 每轮 3 分钟，难度与积分倍率随时间 ×1.0 → ×2.0；结算展示冠军队、前三名领奖台，8 秒后自动开下一轮。
+- 礼物映射（见 `baozi/src/config.js` 的 `GIFTS`）：小心心→全队加油；玫瑰→本队包子雨；棒棒糖→全队冲锋；甜甜圈→本轮英雄；爱你→金包子雨；跑车→永久英雄 + 全队升级；嘉年华→超级大包子 + 烟花。
+
+快捷键：`H` 隐藏/显示界面，`/` 或回车打开弹幕面板，`O` 开关描边后处理。
+
+## 弹幕接入
+
+页面自带「本地模拟」和手动输入面板用于演示。接入真实直播间请在弹幕面板填入你自备的授权 WebSocket 服务地址，或通过以下 API 推送：
+
+```js
+window.BaoziGame.receiveDanmaku({ user: '观众昵称', text: 'A', id: '可选的去重 id' });
+window.BaoziGame.receiveGift({ user: '观众昵称', gift: '玫瑰', count: 1 });
+window.BaoziGame.receiveLike({ user: '观众昵称', count: 10 });
+window.BaoziGame.connectDanmaku('wss://your-authorized-service/ws'); // 消息为 JSON：{type:'danmaku'|'gift'|'like', user, text|gift|count}
+window.BaoziGame.disconnectDanmaku();
+window.BaoziGame.getState(); // 当前回合、队伍分、观众战功、包子/老鼠/英雄数量
+```
+
+与开心农场一样，本项目**不包含**任何抓取抖音数据、模拟登录或处理账号凭据的代码。
+
+## 文件
+
+- `baozi/index.template.html` / `baozi/style.css` / `baozi/startup.js`：竖屏 HUD 模板、样式、加载与错误提示。
+- `baozi/src/main.js`：渲染器、相机、主循环、UI 事件、`window.BaoziGame` API。
+- `baozi/src/world.js`：程序化夜市包子铺场景（蒸笼竞技场、灯笼、招牌、碗筷等），静态物件合批。
+- `baozi/src/actors.js`：包子侠、英雄、大厨、老鼠、包子、竹篓建模与动画。
+- `baozi/src/game.js`：组队、抢包子、运送、升级、老鼠、礼物、回合结算等核心逻辑。
+- `baozi/src/danmaku.js`：弹幕指令解析、礼物别名、WebSocket 接入、本地自动模拟。
+- `baozi/src/hud.js`：HUD、战功榜、事件流、结算面板。
+- `baozi/src/art.js` / `outline.js` / `effects.js` / `audio.js`：手绘贴图与卡通材质、深度描边后处理、粒子特效、合成音效。
+- `baozi/build.mjs`：esbuild 打包成单文件 `baozi/index.html`。
