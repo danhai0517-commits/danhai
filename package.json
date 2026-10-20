@@ -6,8 +6,10 @@
   "scripts": {
     "dev": "node server.mjs",
     "start": "node server.mjs",
-    "check": "node --check farm.js && node --check startup.js && node --check server.mjs && node --check build.mjs && node build.mjs --check",
-    "build": "node build.mjs"
+    "check": "node --check farm.js && node --check startup.js && node --check server.mjs && node --check build.mjs && node build.mjs --check && npm run check:baozi",
+    "build": "node build.mjs && node baozi/build.mjs",
+    "check:baozi": "node --check baozi/startup.js && node --check baozi/build.mjs && for f in baozi/src/*.js; do node --check \"$f\" || exit 1; done && node baozi/build.mjs --check",
+    "build:baozi": "node baozi/build.mjs"
   },
   "devDependencies": {
     "esbuild": "0.28.2"

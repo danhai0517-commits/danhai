@@ -1,0 +1,52 @@
+<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#2a1a12"><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Ctext y=%2726%27 font-size=%2727%27%3E🥟%3C/text%3E%3C/svg%3E"><title>抢包子大作战 · 抖音弹幕互动</title><!-- BAOZI_STYLES --></head>
+<body>
+<div id="stage" class="stage">
+<div id="scene-container" class="scene"></div>
+<div class="paper-grain" aria-hidden="true"></div>
+<div id="float-layer" class="float-layer" aria-hidden="true"></div>
+<div id="hud" class="hud">
+  <header class="top-plate">
+    <div class="title-plate"><span class="title-icon">🥟</span><div><strong>抢包子大作战</strong><small>夜市包子铺 · 弹幕组队抢包子</small></div><span class="round-badge">第 <b id="round-no">1</b> 轮</span></div>
+    <div class="progress-plate"><div class="progress-track"><span id="bun-progress" class="progress-fill"></span></div><div class="progress-label">本轮出锅 <b id="bun-count">0</b> / <b id="bun-total">120</b></div></div>
+    <div class="chips">
+      <span class="chip chip-diff">⚡ 难度 ×<b id="difficulty">1.00</b> · 积分 ×<b id="multiplier">1.00</b></span>
+      <span class="chip chip-cd">👍 冷却 2s</span>
+      <span class="chip chip-hero">🧑‍🍳 英雄 ×<b id="hero-count">0</b></span>
+    </div>
+  </header>
+  <section class="score-plate"><span class="score-label">总积分</span><strong id="total-score">0</strong><span class="score-sub">包子侠 <b id="unit-count">0</b> 人</span></section>
+  <section class="team-board" id="team-board" aria-label="四队积分"></section>
+  <section class="rank-board"><h3>🏆 战功榜</h3><ol id="rank-list" class="rank-list"></ol></section>
+  <div class="join-hint" id="join-hint">发送 <b>A</b> <b>B</b> <b>C</b> <b>D</b> 加入战队 · 发「冲」加速 · 「666」为全队加油</div>
+  <section class="event-feed" id="event-feed" aria-live="polite"></section>
+  <footer class="bottom-bar">
+    <div class="timer-plate"><div class="timer-track"><span id="timer-fill" class="timer-fill"></span></div><strong id="timer" class="timer">03:00</strong></div>
+    <div class="bottom-buttons"><button id="chat-button" class="soft-button" type="button">💬 弹幕面板</button><button id="sound-button" class="soft-button" type="button" aria-pressed="false">🔇 音效</button><button id="hide-button" class="soft-button" type="button">👁 隐藏界面</button></div>
+    <p class="disclaimer">本玩法不鼓励未成年人参与；未成年人参与者应当在监护人同意并陪同下进行。</p>
+  </footer>
+</div>
+<button id="show-button" class="show-button" type="button" hidden>👁 显示界面</button>
+<div id="result" class="result" hidden>
+  <div class="result-card">
+    <p class="result-eyebrow">ROUND RESULT · 本轮结算</p>
+    <h2 id="result-title">红队 夺得包子王！</h2>
+    <div class="podium" id="podium"></div>
+    <div class="result-teams" id="result-teams"></div>
+    <p class="result-next">下一轮 <b id="result-countdown">6</b> 秒后开始 · 战队成员全部保留</p>
+  </div>
+</div>
+<div id="chat-panel" class="chat-panel" hidden>
+  <div class="chat-header"><h3>💬 弹幕面板</h3><span class="live-badge" id="chat-mode"><i></i>本地模拟</span><button id="chat-close" class="close-button" type="button" aria-label="关闭">×</button></div>
+  <label class="toggle"><input type="checkbox" id="auto-sim" checked><span>自动模拟观众弹幕（演示用）</span></label>
+  <form id="chat-form" class="chat-form"><input id="chat-user" placeholder="昵称" maxlength="16" value="小笼包"><input id="chat-text" placeholder="输入弹幕，如 A / 冲 / 666 / 加入B" maxlength="40" autocomplete="off"><button type="submit" class="soft-button primary">发送</button></form>
+  <div class="quick-row" id="quick-commands"></div>
+  <h4>模拟礼物</h4>
+  <div class="quick-row" id="quick-gifts"></div>
+  <h4>接入真实弹幕</h4>
+  <form id="ws-form" class="chat-form"><input id="ws-url" placeholder="wss://你的授权弹幕服务/ws"><button type="submit" class="soft-button primary">连接</button><button type="button" id="ws-disconnect" class="soft-button">断开</button></form>
+  <p class="chat-note">页面不会自行抓取抖音数据。请把授权弹幕服务的事件转换后调用 <code>window.BaoziGame.receiveDanmaku({ user, text, id })</code>、<code>receiveGift({ user, gift, count })</code>、<code>receiveLike({ user, count })</code>，或通过 WebSocket 发送同结构 JSON（带 <code>type</code> 字段）。</p>
+</div>
+<div id="toast" class="toast" hidden></div>
+<div id="loading" class="loading"><span class="loading-bun">🥟</span><strong>蒸笼正在加热…</strong><span>包子侠马上就位</span></div>
+</div>
+<noscript><div class="no-script-message">请启用浏览器的 JavaScript，才能进入包子铺。</div></noscript><!-- BAOZI_SCRIPTS --></body></html>
